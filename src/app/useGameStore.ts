@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 interface GameState {
   score: number;
@@ -9,27 +10,35 @@ interface GameState {
   buyAutoclicker: () => void;
 }
 
-export const useGameStore = create<GameState>((set) => ({
-  score: 0,
-  multiplier: 1,
-  autoclickers: 0,
+export const useGameStore = create<GameState>()(
+  persist(
+    (set) => ({
+      score: 0,
+      multiplier: 1,
+      autoclickers: 0,
 
-  addScore: (amount: number) =>
-    set((state: GameState) => ({
-      score: state.score + amount * state.multiplier,
-    })),
+      addScore: (amount: number) =>
+        set((state: GameState) => ({
+          score: state.score + amount * state.multiplier,
+        })),
 
-  increaseMultiplier: () =>
-    set((state: GameState) =>
-      state.score >= 50
-        ? { score: state.score - 50, multiplier: state.multiplier + 1 }
-        : state
-    ),
+      increaseMultiplier: () =>
+        set((state: GameState) =>
+          state.score >= 50
+            ? { score: state.score - 50, multiplier: state.multiplier + 1 }
+            : state
+        ),
 
-  buyAutoclicker: () =>
-    set((state: GameState) =>
-      state.score >= 100
-        ? { score: state.score - 100, autoclickers: state.autoclickers + 1 }
-        : state
-    ),
-}));
+      buyAutoclicker: () =>
+        set((state: GameState) =>
+          state.score >= 100
+            ? { score: state.score - 100, autoclickers: state.autoclickers + 1 }
+            : state
+        ),
+    }),
+    {
+      name: "clicker-game-state",
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);
