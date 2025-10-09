@@ -2,8 +2,10 @@
 
 import { useEffect } from "react";
 import { useGameStore } from "./useGameStore";
+import { useToast } from "./toast/ToastProvider";
 
 const GameLoop = () => {
+    const { showToast } = useToast();
     const autoclickers = useGameStore((s) => s.autoclickers);
     const addScore = useGameStore((s) => s.addScore);
     const applyOfflineProgress = useGameStore((s) => s.applyOfflineProgress);
@@ -12,7 +14,12 @@ const GameLoop = () => {
     useEffect(() => {
         // On mount, apply offline gains since last saved and show toast if any
         const before = Date.now();
+        const prev = useGameStore.getState().score;
         applyOfflineProgress(before);
+        const gained = useGameStore.getState().score - prev;
+        if (gained > 0) {
+            showToast(`Offline gains: +${gained}`, "success");
+        }
         const interval = setInterval(() => {
             if (autoclickers > 0) {
                 addScore(autoclickers);

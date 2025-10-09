@@ -1,8 +1,10 @@
 "use client";
 
 import { useGameStore } from "./useGameStore";
+import { useToast } from "./toast/ToastProvider";
 
 const Shop = () => {
+    const { showToast } = useToast();
     const score = useGameStore((s) => s.score);
     const multiplierCost = useGameStore((s) => s.multiplierCost);
     const autoclickerCost = useGameStore((s) => s.autoclickerCost);
@@ -20,7 +22,15 @@ const Shop = () => {
     return (
         <div className="mt-6 space-x-4">
             <button
-                onClick={increaseMultiplier}
+                onClick={() => {
+                    const before = score;
+                    increaseMultiplier();
+                    if (before >= multiplierCost) {
+                        showToast("Purchased Multiplier +1", "success");
+                    } else {
+                        showToast("Not enough to buy Multiplier", "error");
+                    }
+                }}
                 disabled={!canBuyMultiplier}
                 className={`text-white border border-white px-4 py-2 rounded-md ${!canBuyMultiplier ? "opacity-50 cursor-not-allowed" : ""}`}
                 title={!canBuyMultiplier ? `Need ${multiplierCost - score} more` : ""}
@@ -28,7 +38,15 @@ const Shop = () => {
                 Buy Multiplier (Cost: {multiplierCost})
             </button>
             <button
-                onClick={buyAutoclicker}
+                onClick={() => {
+                    const before = score;
+                    buyAutoclicker();
+                    if (before >= autoclickerCost) {
+                        showToast("Purchased AutoClicker +1", "success");
+                    } else {
+                        showToast("Not enough to buy AutoClicker", "error");
+                    }
+                }}
                 disabled={!canBuyAutoclicker}
                 className={`text-white border border-white px-4 py-2 rounded-md ${!canBuyAutoclicker ? "opacity-50 cursor-not-allowed" : ""}`}
                 title={!canBuyAutoclicker ? `Need ${autoclickerCost - score} more` : ""}
@@ -36,14 +54,25 @@ const Shop = () => {
                 Buy AutoClicker (Cost: {autoclickerCost})
             </button>
             <button
-                onClick={buyOfflineUpgrade}
-                disabled={!canBuyOffline}
+                onClick={
+                    () => {
+                        const before = score;
+                        buyOfflineUpgrade();
+                        if (before >= offlineUpgradeCost) {
+                            showToast("Offline gain +1%", "success");
+                        } else {
+                            showToast("Not enough to buy Offline Upgrade", "error");
+                        }
+                    }
+                }
+                disabled={!canBuyOffline
+                }
                 className={`text-white border border-white px-4 py-2 rounded-md ${!canBuyOffline ? "opacity-50 cursor-not-allowed" : ""}`}
                 title={!canBuyOffline ? `Need ${offlineUpgradeCost - score} more` : ""}
             >
-                Offline Gain +1% (lvl {offlineUpgradeLevel}, current {offlineBonusPct}) — Cost: {offlineUpgradeCost}
-            </button>
-        </div>
+                Offline Gain + 1 % (lvl {offlineUpgradeLevel}, current {offlineBonusPct}) — Cost: {offlineUpgradeCost}
+            </button >
+        </div >
     );
 };
 
