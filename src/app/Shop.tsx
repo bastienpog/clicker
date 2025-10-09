@@ -2,6 +2,7 @@
 
 import { useGameStore } from "./useGameStore";
 import { useToast } from "./toast/ToastProvider";
+import { formatNumberShort } from "./utils";
 
 const Shop = () => {
     const { showToast } = useToast();
@@ -31,11 +32,10 @@ const Shop = () => {
                         showToast("Not enough to buy Multiplier", "error");
                     }
                 }}
-                disabled={!canBuyMultiplier}
                 className={`text-white border border-white px-4 py-2 rounded-md ${!canBuyMultiplier ? "opacity-50 cursor-not-allowed" : ""}`}
-                title={!canBuyMultiplier ? `Need ${multiplierCost - score} more` : ""}
+                title={!canBuyMultiplier ? `Need ${formatNumberShort(multiplierCost - score)} more` : ""}
             >
-                Buy Multiplier (Cost: {multiplierCost})
+                Buy Multiplier (Cost: {formatNumberShort(multiplierCost)})
             </button>
             <button
                 onClick={() => {
@@ -47,11 +47,10 @@ const Shop = () => {
                         showToast("Not enough to buy AutoClicker", "error");
                     }
                 }}
-                disabled={!canBuyAutoclicker}
                 className={`text-white border border-white px-4 py-2 rounded-md ${!canBuyAutoclicker ? "opacity-50 cursor-not-allowed" : ""}`}
-                title={!canBuyAutoclicker ? `Need ${autoclickerCost - score} more` : ""}
+                title={!canBuyAutoclicker ? `Need ${formatNumberShort(autoclickerCost - score)} more` : ""}
             >
-                Buy AutoClicker (Cost: {autoclickerCost})
+                Buy AutoClicker (Cost: {formatNumberShort(autoclickerCost)})
             </button>
             <button
                 onClick={
@@ -65,12 +64,10 @@ const Shop = () => {
                         }
                     }
                 }
-                disabled={!canBuyOffline
-                }
                 className={`text-white border border-white px-4 py-2 rounded-md ${!canBuyOffline ? "opacity-50 cursor-not-allowed" : ""}`}
-                title={!canBuyOffline ? `Need ${offlineUpgradeCost - score} more` : ""}
+                title={!canBuyOffline ? `Need ${formatNumberShort(offlineUpgradeCost - score)} more` : ""}
             >
-                Offline Gain + 1 % (lvl {offlineUpgradeLevel}, current {offlineBonusPct}) — Cost: {offlineUpgradeCost}
+                Offline Gain + 1 % (lvl {offlineUpgradeLevel}, current {offlineBonusPct}) — Cost: {formatNumberShort(offlineUpgradeCost)}
             </button >
         </div >
     );

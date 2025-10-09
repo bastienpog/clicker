@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useGameStore } from "./useGameStore";
 import { useToast } from "./toast/ToastProvider";
+import { formatNumberShort } from "./utils";
 
 const GameLoop = () => {
     const { showToast } = useToast();
@@ -18,7 +19,7 @@ const GameLoop = () => {
         applyOfflineProgress(before);
         const gained = useGameStore.getState().score - prev;
         if (gained > 0) {
-            showToast(`Offline gains: +${gained}`, "success");
+            showToast(`Offline gains: +${formatNumberShort(gained)}`, "success");
         }
         const interval = setInterval(() => {
             if (autoclickers > 0) {
