@@ -7,9 +7,16 @@ interface GameState {
   autoclickers: number;
   multiplierCost: number;
   autoclickerCost: number;
+  lastSavedAt: number | null;
+  offlineBonusPct: number; // e.g., 0.01 for +1%
+  offlineUpgradeLevel: number;
+  offlineUpgradeCost: number;
   addScore: (amount: number) => void;
   increaseMultiplier: () => void;
   buyAutoclicker: () => void;
+  applyOfflineProgress: (now: number) => void;
+  buyOfflineUpgrade: () => void;
+  touchLastSaved: (now: number) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -20,6 +27,10 @@ export const useGameStore = create<GameState>()(
       autoclickers: 0,
       multiplierCost: 50,
       autoclickerCost: 100,
+      lastSavedAt: null,
+      offlineBonusPct: 0.01,
+      offlineUpgradeLevel: 0,
+      offlineUpgradeCost: 200,
 
       addScore: (amount: number) =>
         set((state: GameState) => ({
@@ -51,6 +62,49 @@ export const useGameStore = create<GameState>()(
             autoclickerCost: newAutoclickerCost,
           } as GameState;
         }),
+
+      applyOfflineProgress: (now: number) =>
+        set((state: GameState) => {
+          if (!state.lastSavedAt) {
+            return { ...state, lastSavedAt: now } as GameState;
+          }
+          const elapsedSec = Math.max(
+            0,
+            Math.floor((now - state.lastSavedAt) / 1000)
+          );
+          if (elapsedSec === 0) return state;
+          const perSecond = state.autoclickers; // 1 score per autoclicker per second
+          const gained = Math.floor(
+            perSecond * elapsedSec * state.offlineBonusPct
+          );
+          if (gained <= 0) return { ...state, lastSavedAt: now } as GameState;
+          return {
+            ...state,
+            score: state.score + gained,
+            lastSavedAt: now,
+          } as GameState;
+        }),
+
+      buyOfflineUpgrade: () =>
+        set((state: GameState) => {
+          if (state.score < state.offlineUpgradeCost) return state;
+          const newScore = state.score - state.offlineUpgradeCost;
+          const newLevel = state.offlineUpgradeLevel + 1;
+          const newBonusPct = +(state.offlineBonusPct + 0.01).toFixed(4); // +1% each level
+          const newCost = Math.ceil(state.offlineUpgradeCost * 1.25);
+          return {
+            ...state,
+            score: newScore,
+            offlineUpgradeLevel: newLevel,
+            offlineBonusPct: newBonusPct,
+            offlineUpgradeCost: newCost,
+          } as GameState;
+        }),
+
+      touchLastSaved: (now: number) =>
+        set(
+          (state: GameState) => ({ ...state, lastSavedAt: now } as GameState)
+        ),
     }),
     {
       name: "clicker-game-state",
