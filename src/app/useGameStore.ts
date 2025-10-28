@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 interface GameState {
+  reset: () => void;
   score: number;
   multiplier: number;
   autoclickers: number;
@@ -31,6 +32,19 @@ export const useGameStore = create<GameState>()(
       offlineBonusPct: 0.01,
       offlineUpgradeLevel: 0,
       offlineUpgradeCost: 200,
+
+      reset: () =>
+        set(() => ({
+          score: 0,
+          multiplier: 1,
+          autoclickers: 0,
+          multiplierCost: 50,
+          autoclickerCost: 100,
+          lastSavedAt: null,
+          offlineBonusPct: 0.01,
+          offlineUpgradeLevel: 0,
+          offlineUpgradeCost: 200,
+        })),
 
       addScore: (amount: number) =>
         set((state: GameState) => ({
