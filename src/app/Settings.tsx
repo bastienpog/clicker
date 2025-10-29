@@ -11,7 +11,7 @@ const Settings = () => {
         <div className="w-full max-w-xl m-4">
             <div className="flex gap-3">
                 <button
-                    className="text-white border border-white px-3 py-2 rounded-md"
+                    className="text-white border border-white px-3 py-2 rounded-md hover:text-black hover:bg-white"
                     onClick={() => {
                         reset();
                         showToast("Game reset", "success");

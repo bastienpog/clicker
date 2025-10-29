@@ -32,7 +32,7 @@ const Shop = () => {
                         showToast("Not enough to buy Multiplier", "error");
                     }
                 }}
-                className={`text-white border border-white px-4 py-2 rounded-md ${!canBuyMultiplier ? "opacity-50 cursor-not-allowed" : ""}`}
+                className={`text-white border border-white px-4 py-2 rounded-md ${!canBuyMultiplier ? "opacity-50 cursor-not-allowed" : "hover:text-black hover:bg-white"}`}
                 title={!canBuyMultiplier ? `Need ${formatNumberShort(multiplierCost - score)} more` : ""}
             >
                 Buy Multiplier (Cost: {formatNumberShort(multiplierCost)})
@@ -47,7 +47,7 @@ const Shop = () => {
                         showToast("Not enough to buy AutoClicker", "error");
                     }
                 }}
-                className={`text-white border border-white px-4 py-2 rounded-md ${!canBuyAutoclicker ? "opacity-50 cursor-not-allowed" : ""}`}
+                className={`text-white border border-white px-4 py-2 rounded-md ${!canBuyAutoclicker ? "opacity-50 cursor-not-allowed" : "hover:text-black hover:bg-white"}`}
                 title={!canBuyAutoclicker ? `Need ${formatNumberShort(autoclickerCost - score)} more` : ""}
             >
                 Buy AutoClicker (Cost: {formatNumberShort(autoclickerCost)})
@@ -64,7 +64,7 @@ const Shop = () => {
                         }
                     }
                 }
-                className={`text-white border border-white px-4 py-2 rounded-md ${!canBuyOffline ? "opacity-50 cursor-not-allowed" : ""}`}
+                className={`text-white border border-white px-4 py-2 rounded-md ${!canBuyOffline ? "opacity-50 cursor-not-allowed" : "hover:text-black hover:bg-white"}`}
                 title={!canBuyOffline ? `Need ${formatNumberShort(offlineUpgradeCost - score)} more` : ""}
             >
                 Offline Gain + 1 % (lvl {offlineUpgradeLevel}, current {offlineBonusPct}) — Cost: {formatNumberShort(offlineUpgradeCost)}
