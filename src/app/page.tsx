@@ -6,6 +6,7 @@ import Shop from "./Shop";
 import Stats from "./Stats";
 import GameLoop from "./GameLoop";
 import Settings from "./Settings";
+import Achievements from "./Achievements";
 
 const Home = () => {
   return (
@@ -18,7 +19,10 @@ const Home = () => {
         <Score />
         <ClickButton />
         <Shop />
-        <Stats />
+        <div className="flex flex-row space-x-40">
+          <Stats />
+          <Achievements />
+        </div>
       </div>
     </main>
   );

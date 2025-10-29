@@ -18,6 +18,8 @@ interface GameState {
   applyOfflineProgress: (now: number) => void;
   buyOfflineUpgrade: () => void;
   touchLastSaved: (now: number) => void;
+  unlockedAchievements: string[];
+  unlockAchievement: (id: string) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -32,6 +34,7 @@ export const useGameStore = create<GameState>()(
       offlineBonusPct: 0.01,
       offlineUpgradeLevel: 0,
       offlineUpgradeCost: 200,
+      unlockedAchievements: [],
 
       reset: () =>
         set(() => ({
@@ -44,6 +47,7 @@ export const useGameStore = create<GameState>()(
           offlineBonusPct: 0.01,
           offlineUpgradeLevel: 0,
           offlineUpgradeCost: 200,
+          unlockedAchievements: [],
         })),
 
       addScore: (amount: number) =>
@@ -112,6 +116,15 @@ export const useGameStore = create<GameState>()(
             offlineUpgradeLevel: newLevel,
             offlineBonusPct: newBonusPct,
             offlineUpgradeCost: newCost,
+          } as GameState;
+        }),
+
+      unlockAchievement: (id: string) =>
+        set((state: GameState) => {
+          if (state.unlockedAchievements.includes(id)) return state;
+          return {
+            ...state,
+            unlockedAchievements: [...state.unlockedAchievements, id],
           } as GameState;
         }),
 
