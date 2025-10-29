@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 
 export type ToastVariant = "success" | "error" | "info";
 
@@ -31,7 +31,7 @@ const Toast = ({ item }: { item: ToastItem }) => {
 
 const ToastViewport = ({ toasts }: { toasts: ToastItem[] }) => {
     return (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 space-y-2 z-50">
+        <div className="fixed bottom-6 right-6 space-y-2 z-50 items-end">
             {toasts.map((t) => (
                 <Toast key={t.id} item={t} />
             ))}
@@ -41,11 +41,21 @@ const ToastViewport = ({ toasts }: { toasts: ToastItem[] }) => {
 
 export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
     const [toasts, setToasts] = useState<ToastItem[]>([]);
+    const recentMapRef = useRef<Map<string, number>>(new Map());
 
     const showToast = useCallback((message: string, variant: ToastVariant = "info") => {
-        const id = Date.now() + Math.random();
+        const key = `${variant}:${message}`;
+        const now = Date.now();
+
+        // De-dup identical toasts within 1500ms
+        const last = recentMapRef.current.get(key) ?? 0;
+        if (now - last < 1500) return;
+        recentMapRef.current.set(key, now);
+
+        const id = now + Math.random();
         const item: ToastItem = { id, message, variant };
-        setToasts((prev) => [...prev, item]);
+        // Cap to last 3 toasts on screen
+        setToasts((prev) => [...prev.slice(-2), item]);
         setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 2500);
     }, []);
 
