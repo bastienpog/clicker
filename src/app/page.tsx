@@ -1,7 +1,7 @@
 "use client";
 
 import Score from "./Score";
-import ClickButton from "./ClickButton";
+import Planet from "./Planet";
 import Shop from "./Shop";
 import Stats from "./Stats";
 import GameLoop from "./GameLoop";
@@ -17,7 +17,7 @@ const Home = () => {
       <div className="flex flex-col items-center justify-center h-screen">
         <GameLoop />
         <Score />
-        <ClickButton />
+        <Planet />
         <Shop />
         <div className="flex flex-row space-x-40">
           <Stats />

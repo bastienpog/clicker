@@ -4,6 +4,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 interface GameState {
   reset: () => void;
   score: number;
+  goal: number;
   multiplier: number;
   autoclickers: number;
   multiplierCost: number;
@@ -26,6 +27,7 @@ export const useGameStore = create<GameState>()(
   persist(
     (set) => ({
       score: 0,
+      goal: 1400000000,
       multiplier: 1,
       autoclickers: 0,
       multiplierCost: 50,
@@ -39,6 +41,7 @@ export const useGameStore = create<GameState>()(
       reset: () =>
         set(() => ({
           score: 0,
+          goal: 1400000000,
           multiplier: 1,
           autoclickers: 0,
           multiplierCost: 50,
